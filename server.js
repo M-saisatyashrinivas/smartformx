@@ -90,7 +90,7 @@ app.get('/auth/google/callback',
     const formId = req.query.state;
     
     if (formId) {
-      return res.redirect(`https://formify-y9mb.onrender.com/form.html?id=${formId}&email=${email}`);
+      return res.redirect(`/form.html?id=${formId}&email=${email}`);
     }
     
     const { rows } = await pool.query('SELECT * FROM Users WHERE Email = $1', [email]);
@@ -100,9 +100,9 @@ app.get('/auth/google/callback',
     }
     
     if (rows[0].role === 'Owner') {
-      res.redirect('https://formify-y9mb.onrender.com/owner.html?email=' + email);
+      res.redirect('/owner.html?email=' + email);
     } else {
-      res.redirect('https://formify-y9mb.onrender.com/admin.html?email=' + email);
+      res.redirect('/admin.html?email=' + email);
     }
   }
 );
