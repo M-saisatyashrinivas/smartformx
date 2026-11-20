@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Form X</title>
+  <style>
+    /* UI ENHANCEMENTS: 
+       - Senior UX Typography
+       - Interactive 3D Mesh Background
+       - Enhanced Glassmorphism & Depth
+       - Logic & Colors Untouched
+    */
+    :root {
+      --bg-dark: #09090b;
+      --text-main: #fafafa;
+      --text-muted: #a1a1aa;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body { 
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh;
+      background: #09090b;
+      
+      background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(120, 119, 198, 0.15), transparent);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      overflow-y: auto;
+      line-height: 1.5;
+    }
+
+    .hero {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+    
+    h1 {
+      font-size: clamp(3em, 10vw, 6em);
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 10px;
+      letter-spacing: -2px;
+      line-height: 1;
+      opacity: 0;
+      transform: scale(0.95);
+      animation: revealScale 1s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.2s;
+    }
+    
+    .subtitle {
+      font-size: clamp(1.1em, 3vw, 1.5em);
+      color: var(--text-muted);
+      margin-bottom: 40px;
+      font-weight: 400;
+      opacity: 0;
+      animation: reveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.4s;
+    }
+    
+    /* Login Button */
+    .login-btn {
+      background: var(--text-main);
+      color: var(--bg-dark);
+      border: none;
+      padding: 16px 40px;
+      font-size: 1.1em;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      text-decoration: none;
+      display: inline-block;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 14px rgba(255, 255, 255, 0.1);
+      opacity: 0;
+      animation: reveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.6s;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(255, 255, 255, 0.15);
+    }
+
+    .login-btn:active {
+      transform: scale(0.97);
+    }
+
+    /* Footer Stats */
+    .footer-text {
+      position: relative;
+      padding-bottom: 40px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      z-index: 2;
+      opacity: 0;
+      animation: reveal 1s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.8s;
+    }
+
+    .footer-text span {
+      font-size: 0.85em;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    
+    .footer-text span:hover {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Animations */
+    @keyframes reveal {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes revealScale {
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @media (max-width: 768px) {
+      .footer-text { flex-direction: column; align-items: center; gap: 10px; padding-bottom: 20px; }
+    }
+  
+    /* Fixed Theme Toggle */
+    .theme-toggle-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--card-bg, #18181b);
+      border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
+      color: var(--text-main, #fafafa);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15em;
+      cursor: pointer;
+      z-index: 9999;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+      padding: 0;
+    }
+    .theme-toggle-btn:hover {
+      transform: scale(1.08);
+    }
+    .theme-toggle-btn:active {
+      transform: scale(0.92);
+    }
+
+    /* Soft Premium Light Theme */
+    body.light-theme {
+      background: #f4f4f5;
+      background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(99, 102, 241, 0.08), transparent);
+      color: #18181b;
+    }
+    body.light-theme h1 {
+      color: #18181b;
+    }
+    body.light-theme .subtitle {
+      color: #71717a;
+    }
+    body.light-theme .login-btn {
+      background: #18181b;
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+    }
+    body.light-theme .login-btn:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+    body.light-theme .footer-text span {
+      color: #71717a;
+      background: #ffffff;
+      border-color: rgba(0, 0, 0, 0.08);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+    body.light-theme .footer-text span:hover {
+      background: #fafafa;
+      border-color: rgba(0, 0, 0, 0.15);
+    }
+    body.light-theme .theme-toggle-btn {
+      background: #ffffff;
+      border-color: rgba(0, 0, 0, 0.1);
+      color: #18181b;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+  </style>
+</head>
+<body>
+  
+
+  <div class="hero">
+    <h1>SMART FORM X</h1>
+    <p class="subtitle">Intelligent form management</p>
+    <a href="/auth/google" class="login-btn">ACCESS SYSTEM</a>
+  </div>
+
+  <div class="footer-text">
+    <span>🔒 Secure Authentication</span>
+    <span>👥 Role-Based Access</span>
+    <span>📊 Real-Time Analytics</span>
+  </div>
+
+  <script>
+    
+    function initTheme() {
+      const saved = localStorage.getItem('sfx_theme');
+      let theme = saved;
+      if (!theme) {
+        const hour = new Date().getHours();
+        theme = (hour >= 6 && hour < 18) ? 'light' : 'dark';
+      }
+      applyTheme(theme);
+    }
+
+    function applyTheme(theme) {
+      const icon = document.getElementById('themeToggleIcon');
+      if (theme === 'light') {
+        document.body.classList.add('light-theme');
+        if (icon) icon.textContent = '🌙';
+      } else {
+        document.body.classList.remove('light-theme');
+        if (icon) icon.textContent = '☀️';
+      }
+    }
+
+    function toggleTheme() {
+      const isLight = document.body.classList.contains('light-theme');
+      const newTheme = isLight ? 'dark' : 'light';
+      localStorage.setItem('sfx_theme', newTheme);
+      applyTheme(newTheme);
+    }
+
+    initTheme();
+
+  </script>
+
+  <button id="themeToggleBtn" class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Theme" aria-label="Toggle Theme">
+    <span id="themeToggleIcon">☀️</span>
+  </button>
+
+</body>
+</html>

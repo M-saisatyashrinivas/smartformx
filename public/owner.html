@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Owner Dashboard - Smart Form X</title>
+  <style>
+    /* THEME: Smart Form X
+       STYLE: Minimal Dark
+       LOGIC: Preserved Intact
+    */
+    :root {
+      --bg-color: #09090b;
+      --card-bg: #18181b;
+      --text-main: #fafafa;
+      --text-muted: #a1a1aa;
+      --border: rgba(255, 255, 255, 0.06);
+      --border-hover: rgba(255, 255, 255, 0.15);
+      --danger: #ef4444;
+      --success: #10b981;
+      --accent: #ffffff;
+      --accent-dim: rgba(255, 255, 255, 0.1);
+      --transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      background-color: #09090b;
+      
+      background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(120, 119, 198, 0.15), transparent);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .dashboard-container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Header Panel */
+    .header {
+      background: var(--card-bg);
+      padding: 35px;
+      border-radius: 24px;
+      margin-bottom: 40px;
+      border: 1px solid var(--border);
+      backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition);
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 4px; height: 100%;
+      background: var(--text-muted);
+    }
+    
+    h1 {
+      color: var(--text-main);
+      font-size: 2.8em;
+      font-weight: 700;
+      margin-bottom: 10px;
+      letter-spacing: -1px;
+    }
+
+    .badge-owner {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-size: 0.9em;
+      border: 1px solid var(--border);
+      font-weight: 500;
+    }
+    
+    /* Content Sections */
+    .section {
+      background: var(--card-bg);
+      padding: 40px;
+      border-radius: 20px;
+      margin-bottom: 30px;
+      border: 1px solid var(--border);
+      backdrop-filter: blur(10px);
+      transition: var(--transition);
+    }
+
+    .section:hover {
+      border-color: var(--border-hover);
+    }
+    
+    h2 {
+      color: var(--text-main);
+      margin-bottom: 25px;
+      font-size: 1.5em;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    h2::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.1), transparent);
+    }
+    
+    /* Inputs */
+    input {
+      width: 100%;
+      padding: 18px 24px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text-main);
+      font-size: 1.1em;
+      margin-bottom: 20px;
+      transition: var(--transition);
+      font-family: monospace;
+    }
+    
+    input:focus {
+      outline: none;
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.05);
+    }
+    
+    /* Buttons */
+    button {
+      background: var(--text-main);
+      color: var(--bg-color);
+      border: 1px solid transparent;
+      padding: 16px 32px;
+      font-size: 1em;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    
+    button:hover {
+      background: #e4e4e7;
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+    
+    /* Admin List Grid */
+    .admin-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 25px;
+    }
+    
+    .admin-card {
+      background: rgba(255, 255, 255, 0.02);
+      padding: 25px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .admin-card:hover {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: var(--border-hover);
+    }
+    
+    .admin-email {
+      font-size: 1.1em;
+      color: var(--text-main);
+      font-weight: 500;
+      word-break: break-all;
+    }
+    
+    .admin-stats {
+      color: var(--text-muted);
+      font-size: 0.85em;
+      font-family: monospace;
+    }
+
+    .remove-btn {
+      background: rgba(239, 68, 68, 0.05);
+      color: var(--danger);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      padding: 10px;
+      font-size: 0.85em;
+      margin-top: auto;
+      font-weight: 500;
+    }
+
+    .remove-btn:hover {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.4);
+    }
+
+    .remove-btn:active {
+      transform: scale(0.97);
+    }
+    
+    /* Messages */
+    .message {
+      padding: 15px;
+      border-radius: 12px;
+      margin-top: 20px;
+      font-weight: 500;
+      text-align: center;
+      animation: slideIn 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .success { background: rgba(16, 185, 129, 0.1); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.2); }
+    .error { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); }
+  
+    /* Fixed Theme Toggle */
+    .theme-toggle-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--card-bg, #18181b);
+      border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
+      color: var(--primary, #fafafa);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15em;
+      cursor: pointer;
+      z-index: 9999;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+      padding: 0;
+    }
+    .theme-toggle-btn:hover {
+      transform: scale(1.08);
+    }
+    .theme-toggle-btn:active {
+      transform: scale(0.92);
+    }
+
+    /* Soft Premium Light Theme */
+    body.light-theme {
+      --primary: #18181b;
+      --bg-dark: #f4f4f5;
+      --card-bg: #ffffff;
+      --border: rgba(0, 0, 0, 0.08);
+      --text-main: #18181b;
+      --text-muted: #71717a;
+      background: #f4f4f5;
+      background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(99, 102, 241, 0.08), transparent);
+      color: #18181b;
+    }
+    body.light-theme h1 {
+      background: linear-gradient(135deg, #18181b, #71717a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    body.light-theme .header,
+    body.light-theme .section,
+    body.light-theme .admin-card {
+      background: #ffffff;
+      border-color: rgba(0, 0, 0, 0.08);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+    }
+    body.light-theme input {
+      background: #ffffff;
+      border-color: #e4e4e7;
+      color: #18181b;
+    }
+    body.light-theme input:focus {
+      border-color: #18181b;
+      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+    }
+    body.light-theme button {
+      background: #18181b;
+      color: #ffffff;
+    }
+    body.light-theme .remove-btn {
+      background: rgba(239, 68, 68, 0.08) !important;
+      color: #dc2626 !important;
+      border-color: rgba(239, 68, 68, 0.2) !important;
+    }
+    body.light-theme .remove-btn:hover {
+      background: #dc2626 !important;
+      color: #ffffff !important;
+    }
+    body.light-theme .theme-toggle-btn {
+      background: #ffffff;
+      border-color: rgba(0, 0, 0, 0.1);
+      color: #18181b;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+  </style>
+</head>
+<body>
+  
+
+  <div class="dashboard-container">
+    <div class="header">
+      <div>
+        <h1>Owner Dashboard</h1>
+        <p style="font-size: 1.1em; color: var(--text-muted); display: flex; align-items: center; gap: 10px;">
+          AUTHENTICATED USER: 
+          <span class="badge-owner" id="ownerEmail"></span>
+        </p>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Authorize New Administrator</h2>
+      <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+        <input type="email" id="newAdminEmail" placeholder="root@admin.com" style="flex: 1; margin-bottom: 0;">
+        <button onclick="addAdmin()">Grant Access</button>
+      </div>
+      <div id="addMessage"></div>
+    </div>
+
+    <div class="section">
+      <h2>Active Personnel Registry</h2>
+      <div class="admin-list" id="adminList">
+        <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">
+          Initialising database connection...
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* --- ORIGINAL OWNER LOGIC (UNTOUCHED) --- */
+    const urlParams = new URLSearchParams(window.location.search);
+    const ownerEmail = urlParams.get('email');
+    document.getElementById('ownerEmail').textContent = ownerEmail;
+
+    async function addAdmin() {
+      const newAdminEmail = document.getElementById('newAdminEmail').value;
+      if (!newAdminEmail) {
+        showMessage('addMessage', 'Please enter an email', 'error');
+        return;
+      }
+
+      const response = await fetch('/api/admin/add-admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ownerEmail, newAdminEmail })
+      });
+
+      const data = await response.json();
+      if (data.error) {
+        showMessage('addMessage', data.error, 'error');
+      } else {
+        showMessage('addMessage', 'Admin added successfully!', 'success');
+        document.getElementById('newAdminEmail').value = '';
+        loadAdmins();
+      }
+    }
+
+    async function loadAdmins() {
+      const response = await fetch('/api/admin/all-admins', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ownerEmail })
+      });
+
+      const data = await response.json();
+      const adminList = document.getElementById('adminList');
+      
+      if (data.admins && data.admins.length > 0) {
+        adminList.innerHTML = data.admins.map(admin => `
+          <div class="admin-card">
+            <div>
+              <div class="admin-email">${admin.email}</div>
+              <div class="admin-stats">Authorized: ${new Date(admin.createdat).toLocaleDateString()}</div>
+            </div>
+            <button class="remove-btn" onclick="removeAdmin('${admin.email}')">REVOKE ACCESS</button>
+          </div>
+        `).join('');
+      } else {
+        adminList.innerHTML = '<p style="color: var(--text-muted); grid-column: 1/-1; text-align: center;">No active administrators found in registry.</p>';
+      }
+    }
+
+    async function removeAdmin(adminEmail) {
+      if (!confirm(`WARNING: Revoke access for ${adminEmail}? This cannot be undone.`)) return;
+      
+      const response = await fetch('/api/admin/remove-admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ownerEmail, adminEmail })
+      });
+
+      const data = await response.json();
+      alert(data.message || data.error);
+      loadAdmins();
+    }
+
+    function showMessage(elementId, message, type) {
+      const msgEl = document.getElementById(elementId);
+      msgEl.innerHTML = `<div class="message ${type}">${message}</div>`;
+      setTimeout(() => msgEl.innerHTML = '', 3000);
+    }
+
+    loadAdmins();
+  
+    function initTheme() {
+      const saved = localStorage.getItem('sfx_theme');
+      let theme = saved;
+      if (!theme) {
+        const hour = new Date().getHours();
+        theme = (hour >= 6 && hour < 18) ? 'light' : 'dark';
+      }
+      applyTheme(theme);
+    }
+
+    function applyTheme(theme) {
+      const icon = document.getElementById('themeToggleIcon');
+      if (theme === 'light') {
+        document.body.classList.add('light-theme');
+        if (icon) icon.textContent = '🌙';
+      } else {
+        document.body.classList.remove('light-theme');
+        if (icon) icon.textContent = '☀️';
+      }
+    }
+
+    function toggleTheme() {
+      const isLight = document.body.classList.contains('light-theme');
+      const newTheme = isLight ? 'dark' : 'light';
+      localStorage.setItem('sfx_theme', newTheme);
+      applyTheme(newTheme);
+    }
+
+    initTheme();
+
+  </script>
+
+  <button id="themeToggleBtn" class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Theme" aria-label="Toggle Theme">
+    <span id="themeToggleIcon">☀️</span>
+  </button>
+
+</body>
+</html>

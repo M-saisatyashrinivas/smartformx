@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form - Smart Form X</title>
+  <style>
+    :root {
+      --primary: #fafafa;
+      --bg-dark: #09090b;
+      --container-bg: #18181b;
+      --text-muted: #a1a1aa;
+      --border: rgba(255, 255, 255, 0.06);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      background: #09090b;
+      
+      background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(120, 119, 198, 0.15), transparent);
+      color: #fafafa;
+      min-height: 100vh;
+      overflow-y: auto; 
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 60px 20px;
+    }
+
+    .container {
+      background: var(--container-bg);
+      padding: 50px;
+      border-radius: 28px;
+      max-width: 800px;
+      width: 100%;
+      border: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      position: relative;
+      z-index: 2;
+      animation: slideUp 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    h1 {
+      background: linear-gradient(135deg, #ffffff, #a1a1aa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: 2.5em;
+      margin-bottom: 15px;
+      text-align: center;
+      font-weight: 800;
+    }
+    
+    .form-description {
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 1.1em;
+    }
+
+    .deadline-banner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 20px;
+      margin: 0 auto 30px auto;
+      width: fit-content;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 9999px;
+      font-size: 0.9em;
+      color: var(--text-muted);
+    }
+    
+    .question-block {
+      margin-bottom: 30px;
+      padding: 25px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 18px;
+      border-left: 4px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .question-block:hover {
+      background: rgba(255, 255, 255, 0.06);
+      transform: translateX(5px);
+    }
+    
+    .question-label {
+      font-size: 1.15em;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+    
+    .required { color: #f87171; margin-left: 4px; }
+    
+    input[type="text"], input[type="email"], input[type="number"], input[type="date"], textarea, select {
+      width: 100%;
+      padding: 14px 18px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: #fafafa;
+      font-size: 1em;
+      transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #fafafa;
+      background: rgba(255, 255, 255, 0.06);
+      box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1);
+    }
+
+    .option-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 12px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    
+    .option-item:hover {
+      background: rgba(255, 255, 255, 0.07);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .option-item:active {
+      transform: scale(0.97);
+    }
+    
+    .submit-btn {
+      background: #fafafa;
+      color: #09090b;
+      border: none;
+      padding: 18px;
+      font-size: 1.2em;
+      font-weight: 700;
+      border-radius: 14px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 20px;
+      transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .submit-btn:hover:not(:disabled) {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
+    }
+
+    .submit-btn:active:not(:disabled) {
+      transform: scale(0.97);
+    }
+
+    .spinner {
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      border-top: 3px solid #fafafa;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+      margin: 20px auto;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 768px) {
+      .container { padding: 30px 20px; }
+      h1 { font-size: 2em; }
+    }
+  
+    /* Fixed Theme Toggle */
+    .theme-toggle-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--container-bg, #18181b);
+      border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
+      color: var(--primary, #fafafa);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15em;
+      cursor: pointer;
+      z-index: 9999;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+      padding: 0;
+    }
+    .theme-toggle-btn:hover {
+      transform: scale(1.08);
+    }
+    .theme-toggle-btn:active {
+      transform: scale(0.92);
+    }
+
+    /* Soft Premium Light Theme */
+    body.light-theme {
+      --primary: #18181b;
+      --bg-dark: #f4f4f5;
+      --container-bg: #ffffff;
+      --text-muted: #71717a;
+      --border: rgba(0, 0, 0, 0.08);
+      background: #f4f4f5;
+      background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(99, 102, 241, 0.08), transparent);
+      color: #18181b;
+    }
+    body.light-theme .container {
+      background: #ffffff;
+      border-color: rgba(0, 0, 0, 0.08);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.06);
+    }
+    body.light-theme h1 {
+      background: linear-gradient(135deg, #18181b, #71717a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    body.light-theme .question-block {
+      background: #fafafa;
+      border-color: #e4e4e7;
+      border-left: 4px solid #18181b;
+    }
+    body.light-theme .question-block:hover {
+      background: #f4f4f5;
+    }
+    body.light-theme input[type="text"],
+    body.light-theme input[type="email"],
+    body.light-theme input[type="number"],
+    body.light-theme input[type="date"],
+    body.light-theme textarea,
+    body.light-theme select {
+      background: #ffffff;
+      border-color: #e4e4e7;
+      color: #18181b;
+    }
+    body.light-theme input:focus,
+    body.light-theme textarea:focus,
+    body.light-theme select:focus {
+      background: #ffffff;
+      border-color: #18181b;
+      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+    }
+    body.light-theme .option-item {
+      background: #ffffff;
+      border-color: #e4e4e7;
+      color: #18181b;
+    }
+    body.light-theme .option-item:hover {
+      background: #f4f4f5;
+      border-color: #d4d4d8;
+    }
+    body.light-theme .submit-btn {
+      background: #18181b;
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+    }
+    body.light-theme .submit-btn:hover:not(:disabled) {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+    body.light-theme .deadline-banner {
+      background: #ffffff;
+      border-color: rgba(0, 0, 0, 0.08);
+      color: #71717a;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+    body.light-theme .theme-toggle-btn {
+      background: #ffffff;
+      border-color: rgba(0, 0, 0, 0.1);
+      color: #18181b;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+  </style>
+</head>
+<body>
+
+  
+
+  <div class="container">
+    <div id="content">
+      <div class="loading">
+        <div class="spinner"></div>
+        <p style="text-align: center; color: var(--text-muted);">Initialising form securely...</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const formId = urlParams.get('id');
+    const studentEmail = urlParams.get('email');
+    let formData = null;
+
+    async function loadForm() {
+      if (!formId) {
+        showError('Invalid form link');
+        return;
+      }
+
+      if (!studentEmail) {
+        showLoginPrompt();
+        return;
+      }
+
+      try {
+        // Check whitelist
+        const whitelistRes = await fetch('/api/whitelist/check', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ formId, studentEmail })
+        });
+
+        const whitelistData = await whitelistRes.json();
+        
+        if (whitelistData.error) {
+          showError(whitelistData.error);
+          return;
+        }
+
+        // Check if already submitted
+        const submissionCheckRes = await fetch('/api/submissions/check-submitted', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ formId, studentEmail })
+        });
+
+        const submissionCheckData = await submissionCheckRes.json();
+
+        if (submissionCheckData.submitted) {
+          showError('✅ You have already submitted this form.');
+          return;
+        }
+
+        // Load form
+        const formRes = await fetch('/api/forms/get-form', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ formId })
+        });
+
+        const form = await formRes.json();
+        
+        if (form.error) {
+          showError(form.error);
+          return;
+        }
+
+        if (!form.islive) {
+          showError('This form is not live yet.');
+          return;
+        }
+
+        if (form.expiresat && new Date() > new Date(form.expiresat)) {
+          showError('⚠️ This form has expired and is no longer accepting responses.');
+          return;
+        }
+
+        formData = form;
+        renderForm();
+      } catch (error) {
+        showError('Failed to load form. Please try again.');
+      }
+    }
+
+    function showLoginPrompt() {
+      document.getElementById('content').innerHTML = `
+        <div class="login-prompt">
+          <h1>Authentication Required</h1>
+          <p class="form-description">Please sign in with Google to access this form</p>
+          <div style="text-align: center;">
+            <a href="/auth/google?formId=${formId}" class="submit-btn" style="text-decoration: none; display: inline-block;">Sign in with Google</a>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderForm() {
+      const structure = typeof formData.formstructure === 'string' ? JSON.parse(formData.formstructure) : formData.formstructure;
+      
+      let formHTML = `
+        <h1>${formData.formtitle}</h1>
+        <p class="form-description">Submitting as: <strong style="color: var(--primary);">${studentEmail}</strong></p>
+        ${formData.expiresat ? `<div class="deadline-banner">📅 Deadline: ${new Date(formData.expiresat).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}</div>` : ''}
+        <form id="responseForm" onsubmit="submitForm(event)">
+      `;
+
+      structure.forEach((question, index) => {
+        formHTML += `<div class="question-block" style="animation: slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards ${index * 0.1}s; opacity: 0;">`;
+        formHTML += `<div class="question-label">${index + 1}. ${question.label}`;
+        if (question.required) {
+          formHTML += `<span class="required">*</span>`;
+        }
+        formHTML += `</div>`;
+
+        switch (question.type) {
+          case 'text':
+            formHTML += `<input type="text" name="${question.id}" ${question.required ? 'required' : ''} placeholder="Your answer">`;
+            break;
+          case 'textarea':
+            formHTML += `<textarea name="${question.id}" ${question.required ? 'required' : ''} placeholder="Your detailed answer"></textarea>`;
+            break;
+          case 'email':
+            formHTML += `<input type="email" name="${question.id}" ${question.required ? 'required' : ''} placeholder="your.email@example.com">`;
+            break;
+          case 'number':
+            formHTML += `<input type="number" name="${question.id}" ${question.required ? 'required' : ''} placeholder="Enter a number">`;
+            break;
+          case 'date':
+            formHTML += `<input type="date" name="${question.id}" ${question.required ? 'required' : ''}>`;
+            break;
+          case 'multiple':
+            formHTML += `<div class="radio-group">`;
+            question.options.forEach((option, optIndex) => {
+              formHTML += `
+                <div class="option-item">
+                  <input type="radio" id="${question.id}-${optIndex}" name="${question.id}" value="${option}" ${question.required ? 'required' : ''}>
+                  <label for="${question.id}-${optIndex}">${option}</label>
+                </div>
+              `;
+            });
+            formHTML += `</div>`;
+            break;
+          case 'checkbox':
+            formHTML += `<div class="checkbox-group">`;
+            question.options.forEach((option, optIndex) => {
+              formHTML += `
+                <div class="option-item">
+                  <input type="checkbox" id="${question.id}-${optIndex}" name="${question.id}" value="${option}">
+                  <label for="${question.id}-${optIndex}">${option}</label>
+                </div>
+              `;
+            });
+            formHTML += `</div>`;
+            break;
+          case 'dropdown':
+            formHTML += `<select name="${question.id}" ${question.required ? 'required' : ''}>`;
+            formHTML += `<option value="">Select an option</option>`;
+            question.options.forEach(option => {
+              formHTML += `<option value="${option}">${option}</option>`;
+            });
+            formHTML += `</select>`;
+            break;
+          case 'file':
+            formHTML += `
+              <div class="file-upload-block">
+                <input type="file" id="${question.id}" name="${question.id}" ${question.required ? 'required' : ''} onchange="validateFileSize(this)" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.zip,.txt">
+                <div style="font-size: 0.8em; color: var(--text-muted); margin-top: 6px;">
+                  📎 Allowed: PDF, Images, Documents (Max 2MB)
+                </div>
+              </div>
+            `;
+            break;
+        }
+
+        formHTML += `</div>`;
+      });
+
+      formHTML += `<button type="submit" class="submit-btn" id="submitBtn">Submit Response</button>`;
+      formHTML += `</form>`;
+
+      document.getElementById('content').innerHTML = formHTML;
+    }
+
+    function validateFileSize(input) {
+      if (input.files && input.files[0]) {
+        const file = input.files[0];
+        if (file.size > 2 * 1024 * 1024) {
+          alert('⚠️ File size exceeds 2MB! Please choose a smaller file under 2MB.');
+          input.value = '';
+        }
+      }
+    }
+
+    async function submitForm(event) {
+      event.preventDefault();
+      
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting...';
+      
+      const formElement = document.getElementById('responseForm');
+      const formDataObj = new FormData(formElement);
+      const structure = typeof formData.formstructure === 'string' ? JSON.parse(formData.formstructure) : formData.formstructure;
+      
+      const responseData = {};
+      
+      try {
+        for (const question of structure) {
+          if (question.type === 'file') {
+            const fileInput = document.getElementById(question.id);
+            if (fileInput && fileInput.files && fileInput.files[0]) {
+              const file = fileInput.files[0];
+              if (file.size > 2 * 1024 * 1024) {
+                throw new Error(`File for "${question.label}" exceeds 2MB limit.`);
+              }
+              submitBtn.textContent = 'Uploading attachment...';
+              
+              const fileData = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = () => reject(new Error('Failed to read file'));
+                reader.readAsDataURL(file);
+              });
+              
+              const uploadRes = await fetch('/api/submissions/upload-file', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  fileName: file.name,
+                  fileType: file.type,
+                  fileData: fileData,
+                  formId: formId
+                })
+              });
+              
+              const uploadResult = await uploadRes.json();
+              if (uploadResult.error) {
+                throw new Error(uploadResult.error);
+              }
+              responseData[question.id] = uploadResult.url;
+            } else {
+              responseData[question.id] = null;
+            }
+          } else if (question.type === 'checkbox') {
+            const values = formDataObj.getAll(question.id);
+            responseData[question.id] = values;
+          } else {
+            responseData[question.id] = formDataObj.get(question.id);
+          }
+        }
+
+        submitBtn.textContent = 'Saving response...';
+        const response = await fetch('/api/submissions/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            formId: formId,
+            studentEmail: studentEmail,
+            responseData: responseData
+          })
+        });
+
+        const result = await response.json();
+        
+        if (result.error) {
+          showError(result.error);
+        } else {
+          showSuccess('✅ Thank you! Your response has been submitted successfully.');
+        }
+      } catch (error) {
+        showError('Failed to submit form. Please try again.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Response';
+      }
+    }
+
+    function showError(message) {
+      document.getElementById('content').innerHTML = `
+        <div style="background: rgba(239, 68, 68, 0.2); color: #f87171; padding: 30px; border-radius: 16px; text-align: center; border: 2px solid #f87171;">
+          ⚠️ ${message}
+        </div>
+      `;
+    }
+
+    function showSuccess(message) {
+      document.getElementById('content').innerHTML = `
+        <div style="background: rgba(34, 197, 94, 0.2); color: #4ade80; padding: 30px; border-radius: 16px; text-align: center; border: 2px solid #4ade80;">
+          ${message}
+        </div>
+      `;
+    }
+
+    loadForm();
+  
+    function initTheme() {
+      const saved = localStorage.getItem('sfx_theme');
+      let theme = saved;
+      if (!theme) {
+        const hour = new Date().getHours();
+        theme = (hour >= 6 && hour < 18) ? 'light' : 'dark';
+      }
+      applyTheme(theme);
+    }
+
+    function applyTheme(theme) {
+      const icon = document.getElementById('themeToggleIcon');
+      if (theme === 'light') {
+        document.body.classList.add('light-theme');
+        if (icon) icon.textContent = '🌙';
+      } else {
+        document.body.classList.remove('light-theme');
+        if (icon) icon.textContent = '☀️';
+      }
+    }
+
+    function toggleTheme() {
+      const isLight = document.body.classList.contains('light-theme');
+      const newTheme = isLight ? 'dark' : 'light';
+      localStorage.setItem('sfx_theme', newTheme);
+      applyTheme(newTheme);
+    }
+
+    initTheme();
+
+  </script>
+
+  <button id="themeToggleBtn" class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Theme" aria-label="Toggle Theme">
+    <span id="themeToggleIcon">☀️</span>
+  </button>
+
+</body>
+</html>
